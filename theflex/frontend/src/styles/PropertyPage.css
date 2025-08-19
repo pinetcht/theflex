@@ -1,0 +1,10 @@
+.backbutton:hover {
+    cursor: pointer;
+}
+
+.backbutton {
+    border: solid;
+    border-radius: 3%;
+    width:fit-content;
+    padding:2px;
+}

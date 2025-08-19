@@ -2,8 +2,9 @@ import React from "react";
 
 const KPI = ({ properties }) => {
   // Calculate overall KPIs (example: average rating, total reviews, trend)
-  const avgRating = (properties.reduce((sum, p) => sum + p.avgRating, 0) / properties.length).toFixed(1);
-  const totalReviews = properties.length * 50; // Example static number
+  
+  const totalReviews = (properties.reduce((sum, p) => sum + p.totalReviews, 0));; // Example static number
+  const avgRating = (properties.reduce((sum, p) => sum + p.averageRating, 0) / properties.length).toFixed(1);
   const trend = "↑ 5%"; // Example trend
 
   return (

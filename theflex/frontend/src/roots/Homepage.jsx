@@ -6,6 +6,7 @@ import KPI from "../components/KPI";
 import Trends from "../components/Trends";
 import ReviewTable from "../components/ReviewTable";
 import PublicPreview from "../components/PublicPreview";
+import { aggregateProperties } from '../utils/aggregateProperties';
 import Dashboard from "../components/Dashboard";
 
 function Homepage() {
@@ -17,40 +18,50 @@ function Homepage() {
 
 
     const [filters, setFilters] = useState({ property: "All", channel: "All", date: "" });
+    const [properties, setProperties] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
     const toggleDisplay = (id) => {
         setReviews(reviews.map(r => r.id === id ? { ...r, display: !r.display } : r));
     };
 
-      const [reviews, setReviews] = useState([]);
 
 
-      const fetchReviews = async () => {
+
+    const fetchReviews = async () => {
         try {
-          const response = await axios.get('http://localhost:3000/api/reviews');
-          setReviews(response.data.reviews);
+            const response = await axios.get('http://localhost:3000/api/reviews');
+            setReviews(response.data.reviews);
         } catch (err) {
-          console.error('Error fetching reviews:', err);
+            console.error('Error fetching reviews:', err);
         }
-      };
+    };
 
-      useEffect(() => {
+    useEffect(() => {
         fetchReviews();
-      }, []);
+    }, []);
+
+
+    useEffect(() => {
+        if (reviews.length > 0) {
+            const aggregated = aggregateProperties(reviews);
+            setProperties(aggregated);
+        }
+    }, [reviews]);
 
 
 
     return (
         <div>
             <h1>The Flex</h1>
-            <Header filters={filters} setFilters={setFilters} />
+            <Header reviews={reviews} propertiesData={properties} filters={filters} setFilters={setFilters} />
 
             <div className="container">
                 {/* KPIs for all properties */}
-                <KPI properties={propertiesData} />
+                <KPI properties={properties} />
 
                 {/* Trends component, can show recurring issues or average ratings */}
-                <Trends properties={propertiesData} />
+                <Trends properties={properties} />
 
                 {/* Dashboard per-property */}
                 <Dashboard />

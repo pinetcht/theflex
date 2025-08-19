@@ -72,8 +72,6 @@ app.get('/api/reviews', (req, res) => {
 // Get reviews by property/listingMapId
 app.get('/api/reviews/:listing', (req, res) => {
     const listingName = req.params.listing;
-
-    console.log(listingName)
     const allReviews = JSON.parse(fs.readFileSync(MOCK_JSON_PATH, 'utf8')).result;
 
     const propertyReviews = allReviews.filter(
