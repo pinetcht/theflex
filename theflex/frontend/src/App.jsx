@@ -56,14 +56,15 @@
 // export default App;
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './roots/Dashboard';
+import Dashboard from './components/Dashboard';
+import Homepage from './roots/Homepage';
 import PropertyPage from './components/PropertyPage';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<Homepage />} />
         <Route path="/property/:id" element={<PropertyPage />} />
       </Routes>
     </Router>

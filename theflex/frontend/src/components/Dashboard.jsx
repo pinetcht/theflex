@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { aggregateProperties } from '../utils/aggregateProperties';
 import axios from 'axios';
 
 function Dashboard() {
@@ -19,33 +20,17 @@ function Dashboard() {
         fetchReviews();
     }, []);
 
-      useEffect(() => {
+    useEffect(() => {
         console.log(reviews)
-      }, [reviews]);
+    }, [reviews]);
 
 
     // Aggregate per property
 
-    const properties = Object.values(
-        reviews.reduce((acc, r) => {
-            if (!acc[r.listing]) acc[r.listing] = {
-                listingMapId: r.mapId,
-                listingName: r.listing,
-                totalReviews: 0,
-                sumRating: 0
-            };
-            acc[r.listing].totalReviews += 1;
-            acc[r.listing].sumRating += r.rating || 0;
-            return acc;
-        }, {})
-    ).map((property, index) => ({
-        listingMapId: index,
-        listingName: property.listingName,
-        totalReviews: property.totalReviews,
-        averageRating: property.totalReviews > 0 ? property.sumRating / property.totalReviews : 0
-    }));
+    const properties = aggregateProperties(reviews);
 
-    console.log(properties)
+
+
 
     return (
         <table border="1">
