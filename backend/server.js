@@ -1,10 +1,8 @@
 const express = require('express');
-const axios = require('axios')
 const request = require('request');
 const fs = require('fs');
 require("dotenv").config();
 var cors = require("cors");
-// import axios from 'axios';
 
 
 const app = express();
@@ -23,18 +21,6 @@ const channelNames = {
     2003: "AirBnb"
 }
 
-function normalizeReviews(rawReviews) {
-    return rawReviews.map(review => ({
-        listing: review.listingName || 'Unknown',
-        type: review.type || 'guest-to-host',
-        channel: review.channelId ? channelNames[review.channelId] : 'unknown',
-        rating: review.rating !== null ? review.rating : averageCategoryRating(review.reviewCategory),
-        date: review.departureDate ? review.departureDate.split(' ')[0] : null,
-        text: review.publicReview || review.privateFeedback || '',
-        mapId: review.listingMapId,
-        guestName: review.guestName || 'anonymous'
-    }));
-}
 
 // Helper: calculate average of reviewCategory ratings if rating is null
 function averageCategoryRating(categories) {
@@ -118,60 +104,6 @@ app.get('/api/reviews', (req, res) => {
         res.json({ reviews });
     });
 });
-
-
-
-//     const reviewId = parseInt(req.params.id);
-
-//     // Safely read publicReviews.json
-//     let publicReviews = [];
-//     if (fs.existsSync(PUBLIC_REVIEWS_PATH)) {
-//         const content = fs.readFileSync(PUBLIC_REVIEWS_PATH, 'utf8').trim();
-//         if (content) {
-//             try {
-//                 publicReviews = JSON.parse(content);
-//             } catch (err) {
-//                 console.error('Error parsing publicReviews.json, defaulting to empty array', err);
-//                 publicReviews = [];
-//             }
-//         }
-//     }
-
-//     // Read all reviews (Hostaway/mock)
-//     const allReviews = fs.existsSync(MOCK_JSON_PATH)
-//         ? JSON.parse(fs.readFileSync(MOCK_JSON_PATH, 'utf8')).result
-//         : [];
-
-//     // Find the review to toggle
-//     const review = allReviews.find(r => r.id === reviewId);
-//     if (!review) return res.status(404).json({ error: 'Review not found' });
-
-//     // Check if review is already in publicReviews
-//     const existing = publicReviews.find(r => r.id === reviewId);
-
-//     if (existing) {
-//         // Toggle display
-//         existing.display = !existing.display;
-//     } else {
-//         // Add new review as published
-//         publicReviews.push({
-//             id: review.id,
-//             display: true,
-//             publicReview: review.publicReview,
-//             listingMapId: review.listingMapId
-//         });
-//     }
-
-//     // Write updated publicReviews back to file
-//     fs.writeFileSync(PUBLIC_REVIEWS_PATH, JSON.stringify(publicReviews, null, 2));
-
-//     // Return updated review
-//     res.json({
-//         ...review,
-//         display: existing ? existing.display : true,
-//         publicReview: review.publicReview
-//     });
-// });
 
 
 

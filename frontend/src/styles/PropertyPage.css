@@ -1,6 +1,5 @@
 body {
     background-color: #fffdf7;
-    /* padding: 2%; */
     margin:0;
 }
 
@@ -11,7 +10,7 @@ body {
     align-items: center;
     justify-self: center;
     width: 80vw;
-    /* border:solid; */
+    
 
 }
 
@@ -35,8 +34,6 @@ body {
 .imageDisplay {
     display: flex;
     flex-direction: row;
-    height: 450px;
-    /* border: solid; */
     justify-self: center;
     width: 80%;
     gap: 10px;
@@ -64,20 +61,16 @@ body {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     gap: 10px;
-    /* border: solid; */
-    /* border-color: red; */
 }
 
 .gridDisplay img {
     height: 100%;
     width: 100%;
     object-fit: cover;
-    /* border: solid; */
-    /* border-color:blueviolet; */
+
 }
 
 .overview {
-    /* border: solid; */
     height: 8vh;
     display: flex;
     flex-direction: row;
@@ -86,7 +79,7 @@ body {
 }
 
 .detail {
-    /* border: solid; */
+    
     display: flex;
     flex-direction: row;
     height: 100%;
@@ -110,7 +103,7 @@ body {
 }
 
 .card {
-    /* border: solid; */
+    
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -125,7 +118,7 @@ body {
     height: 30vh;
     display: flex;
     flex-direction: column;
-    /* border:solid; */
+    
 }
 
 .amenities {
@@ -135,7 +128,7 @@ body {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     margin-bottom: 0rem;
-    /* border:solid; */
+    
 
 }
 
@@ -164,7 +157,7 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #f1f3ee;
-    /* border: solid; */
+    
     border-radius: 20px;
     height: 20vh;
     padding: 1rem;
@@ -239,7 +232,6 @@ body {
 
 /* CSS */
 .backbutton {
-    /* background-color:#f1f3ee; */
     border-radius: 8px;
     border-width: 0;
     color: #f1f3ee;
