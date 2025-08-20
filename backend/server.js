@@ -8,7 +8,7 @@ var cors = require("cors");
 const app = express();
 app.use(cors());
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const HOSTAWAY_API_KEY = process.env.API_KEY;
 const HOSTAWAY_ACCOUNT_ID = process.env.ACCOUNT_ID;

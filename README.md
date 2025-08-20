@@ -6,6 +6,8 @@ This project is a simple review management dashboard built with **React, Express
 
 The app currently integrates with the **Hostaway API**, but also falls back to **mock data** when needed for testing or demo purposes.
 
+Created with help of ChatGPT.
+
 ---
 
 ## 🛠 Tech Stack
@@ -79,7 +81,3 @@ The app currently integrates with the **Hostaway API**, but also falls back to *
 /components    -> React components (Header, KPI, Trends, Charts, etc.)
 /mockData      -> Sample Hostaway JSON for development
 ```
-
----
-
-Would you like me to also include **setup instructions** (install, run frontend + backend, API key setup) so someone can clone and run it right away?
