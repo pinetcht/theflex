@@ -26,7 +26,7 @@ Created with help of ChatGPT.
   * A single dashboard view consolidates all reviews and KPIs.
   * If a filter is applied (property, channel, or date), the data dynamically updates.
   * If no filter is applied, all reviews are displayed.
-  * This design choice prioritizes simplicity and avoids multiple navigation steps (e.g., no property detail pages).
+  * Each element in dashboard leads to property detail page.
 
 * **Trends & Performance**:
 
