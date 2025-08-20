@@ -13,7 +13,7 @@ const PORT = 3000;
 const HOSTAWAY_API_KEY = process.env.API_KEY;
 const HOSTAWAY_ACCOUNT_ID = process.env.ACCOUNT_ID;
 
-
+const PUBLIC_REVIEWS_PATH = './publicReviews.json';
 const MOCK_JSON_PATH = './mock-reviews.json';
 const channelNames = {
     2001: "Google",
@@ -48,6 +48,62 @@ app.use((req, res, next) => {
 
 
 
+// app.get('/api/reviews', (req, res) => {
+//     const options = {
+//         url: 'https://api.hostaway.com/v1/reviews',
+//         headers: {
+//             'Authorization': HOSTAWAY_API_KEY,
+//             'Account-Id': HOSTAWAY_ACCOUNT_ID
+//         },
+//         json: true // Automatically parses JSON response
+//     };
+
+
+
+//     request(options, (error, response, body) => {
+//         const { property, channel, startDate, endDate } = req.query;
+//         let reviews = [];
+
+//         if (!error && response.statusCode === 200) {
+//             reviews = body.result || [];
+//             if (!reviews.length) {
+//                 console.log('Sandbox empty, loading mock reviews...');
+//                 const mockData = fs.readFileSync(MOCK_JSON_PATH, 'utf8');
+//                 reviews = JSON.parse(mockData).result || [];
+//             }
+//         } else {
+//             console.error('Error fetching reviews:', error || body);
+//             const mockData = fs.readFileSync(MOCK_JSON_PATH, 'utf8');
+//             reviews = JSON.parse(mockData).result || [];
+//         }
+
+//         if (property && property !== "All") {
+//             console.log(property)
+//             reviews = reviews.filter(r => r.listingName === property);
+//         }
+//         if (channel && channel !== "All") {
+//             console.log(channel)
+//             reviews = reviews.filter(r => channelNames[r.channelId] === channel);
+//         }
+//         if (startDate && endDate) {
+//             reviews = reviews.filter(r => new Date(startDate) <= new Date(r.departureDate) && new Date(r.departureDate) <= new Date(endDate));
+//         }
+
+//         if (startDate) {
+//             reviews = reviews.filter(r => new Date(startDate) <= new Date(r.departureDate));
+//         }
+
+//         if (endDate) {
+//             reviews = reviews.filter(r => new Date(endDate) >= new Date(r.departureDate));
+//         }
+
+//         // const normalized = normalizeReviews(reviews);
+//         res.json({ reviews: reviews });
+//     });
+// });
+
+// backend: /api/reviews/:id/publish
+
 app.get('/api/reviews', (req, res) => {
     const options = {
         url: 'https://api.hostaway.com/v1/reviews',
@@ -55,10 +111,8 @@ app.get('/api/reviews', (req, res) => {
             'Authorization': HOSTAWAY_API_KEY,
             'Account-Id': HOSTAWAY_ACCOUNT_ID
         },
-        json: true // Automatically parses JSON response
+        json: true
     };
-
-
 
     request(options, (error, response, body) => {
         const { property, channel, startDate, endDate } = req.query;
@@ -77,33 +131,164 @@ app.get('/api/reviews', (req, res) => {
             reviews = JSON.parse(mockData).result || [];
         }
 
+        // Add display field to every review
+        reviews = reviews.map(r => ({ ...r, display: false }));
+
+        // Merge in publicReviews
+        let publicReviews = [];
+        if (fs.existsSync(PUBLIC_REVIEWS_PATH)) {
+            const content = fs.readFileSync(PUBLIC_REVIEWS_PATH, 'utf8').trim();
+            if (content) {
+                try {
+                    publicReviews = JSON.parse(content);
+                } catch (err) {
+                    console.error('Error parsing publicReviews.json', err);
+                }
+            }
+        }
+
+        reviews = reviews.map(r => {
+            const approved = publicReviews.find(pr => pr.id === r.id);
+            return approved ? { ...r, display: approved.display } : r;
+        });
+
+        // Apply filters
         if (property && property !== "All") {
-            console.log(property)
             reviews = reviews.filter(r => r.listingName === property);
         }
         if (channel && channel !== "All") {
-            console.log(channel)
             reviews = reviews.filter(r => channelNames[r.channelId] === channel);
         }
         if (startDate && endDate) {
             reviews = reviews.filter(r => new Date(startDate) <= new Date(r.departureDate) && new Date(r.departureDate) <= new Date(endDate));
         }
-
         if (startDate) {
-            reviews = reviews.filter(r => new Date(startDate) <= new Date(r.departureDate)) ;
+            reviews = reviews.filter(r => new Date(startDate) <= new Date(r.departureDate));
         }
-
         if (endDate) {
-            reviews = reviews.filter(r => new Date(endDate) >= new Date(r.departureDate)) ;
+            reviews = reviews.filter(r => new Date(endDate) >= new Date(r.departureDate));
         }
 
-        // const normalized = normalizeReviews(reviews);
-        res.json({ reviews: reviews });
+        res.json({ reviews });
     });
 });
 
 
+
+//     const reviewId = parseInt(req.params.id);
+
+//     // Safely read publicReviews.json
+//     let publicReviews = [];
+//     if (fs.existsSync(PUBLIC_REVIEWS_PATH)) {
+//         const content = fs.readFileSync(PUBLIC_REVIEWS_PATH, 'utf8').trim();
+//         if (content) {
+//             try {
+//                 publicReviews = JSON.parse(content);
+//             } catch (err) {
+//                 console.error('Error parsing publicReviews.json, defaulting to empty array', err);
+//                 publicReviews = [];
+//             }
+//         }
+//     }
+
+//     // Read all reviews (Hostaway/mock)
+//     const allReviews = fs.existsSync(MOCK_JSON_PATH)
+//         ? JSON.parse(fs.readFileSync(MOCK_JSON_PATH, 'utf8')).result
+//         : [];
+
+//     // Find the review to toggle
+//     const review = allReviews.find(r => r.id === reviewId);
+//     if (!review) return res.status(404).json({ error: 'Review not found' });
+
+//     // Check if review is already in publicReviews
+//     const existing = publicReviews.find(r => r.id === reviewId);
+
+//     if (existing) {
+//         // Toggle display
+//         existing.display = !existing.display;
+//     } else {
+//         // Add new review as published
+//         publicReviews.push({
+//             id: review.id,
+//             display: true,
+//             publicReview: review.publicReview,
+//             listingMapId: review.listingMapId
+//         });
+//     }
+
+//     // Write updated publicReviews back to file
+//     fs.writeFileSync(PUBLIC_REVIEWS_PATH, JSON.stringify(publicReviews, null, 2));
+
+//     // Return updated review
+//     res.json({
+//         ...review,
+//         display: existing ? existing.display : true,
+//         publicReview: review.publicReview
+//     });
+// });
+
+
+
+
 // Get reviews by property/listingMapId
+
+app.post('/api/reviews/:id/publish', (req, res) => {
+    const reviewId = parseInt(req.params.id);
+
+    // Safely read publicReviews.json
+    let publicReviews = [];
+    if (fs.existsSync(PUBLIC_REVIEWS_PATH)) {
+        const content = fs.readFileSync(PUBLIC_REVIEWS_PATH, 'utf8').trim();
+        if (content) {
+            try {
+                publicReviews = JSON.parse(content);
+            } catch (err) {
+                console.error('Error parsing publicReviews.json, defaulting to empty array', err);
+                publicReviews = [];
+            }
+        }
+    }
+
+    // Read all reviews (Hostaway/mock)
+    const allReviews = fs.existsSync(MOCK_JSON_PATH)
+        ? JSON.parse(fs.readFileSync(MOCK_JSON_PATH, 'utf8')).result
+        : [];
+
+    // Find the review to toggle
+    const review = allReviews.find(r => r.id === reviewId);
+    if (!review) return res.status(404).json({ error: 'Review not found' });
+
+    // Check if review is already in publicReviews
+    let updatedDisplay = true;
+    const existing = publicReviews.find(r => r.id === reviewId);
+
+    if (existing) {
+        // Toggle display
+        existing.display = !existing.display;
+        updatedDisplay = existing.display;
+    } else {
+        // Add new review as published
+        publicReviews.push({
+            id: review.id,
+            display: true,
+            publicReview: review.publicReview,
+            listingMapId: review.listingMapId
+        });
+        updatedDisplay = true;
+    }
+
+    // Write updated publicReviews back to file
+    fs.writeFileSync(PUBLIC_REVIEWS_PATH, JSON.stringify(publicReviews, null, 2));
+
+    // Return updated review with display flag
+    res.json({
+        ...review,
+        display: updatedDisplay,
+        publicReview: review.publicReview
+    });
+});
+
+
 app.get('/api/reviews/:listing', (req, res) => {
     const listingName = req.params.listing;
     const allReviews = JSON.parse(fs.readFileSync(MOCK_JSON_PATH, 'utf8')).result;

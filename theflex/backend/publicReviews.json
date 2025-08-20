@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "display": false,
+    "publicReview": "Amazing stay! Hosts were super responsive.",
+    "listingMapId": 1
+  },
+  {
+    "id": 5,
+    "display": true,
+    "publicReview": "Nice location, but could improve the amenities.",
+    "listingMapId": 2
+  },
+  {
+    "id": 2,
+    "display": true,
+    "publicReview": "No hot water during our stay.",
+    "listingMapId": 2
+  },
+  {
+    "id": 3,
+    "display": false,
+    "publicReview": "Perfect location and super clean!",
+    "listingMapId": 3
+  },
+  {
+    "id": 4,
+    "display": true,
+    "publicReview": "Loved the apartment, very clean and cozy.",
+    "listingMapId": 1
+  },
+  {
+    "id": 6,
+    "display": false,
+    "publicReview": "Cabin was beautiful, but a bit cold at night.",
+    "listingMapId": 3
+  }
+]

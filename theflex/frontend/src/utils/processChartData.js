@@ -1,3 +1,4 @@
+import { aggregateProperties } from '../utils/aggregateProperties';
 // Transform reviews for charts
 export const processChartData = ( reviews ) => {
 
@@ -22,10 +23,12 @@ export const processChartData = ( reviews ) => {
     reviewsByProperty[r.listingName] += 1;
   });
 
-  const reviewCount = Object.entries(reviewsByProperty).map(([name, count]) => ({
-    name,
-    count
+  const avgRatings = aggregateProperties(reviews)
+
+  const average = avgRatings.map(property => ({
+    name: property.listingName,
+    value: property.averageRating
   }));
 
-  return { ratingsTrend, reviewCount };
+  return { ratingsTrend, average };
 };

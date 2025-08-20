@@ -43,10 +43,8 @@ function Homepage() {
     };
 
 
-
     useEffect(() => {
         fetchReviews();
-        console.log(filters)
     }, [filters]);
 
 
@@ -55,30 +53,30 @@ function Homepage() {
         if (reviews.length > 0) {
             const aggregated = aggregateProperties(reviews);
             setProperties(aggregated);
+            console.log(reviews)
         }
     }, [reviews]);
 
-    const { ratingsTrend, reviewCount } = processChartData(reviews);
+    const { ratingsTrend, average } = processChartData(reviews);
 
 
     return (
         <div>
-            <h1>The Flex</h1>
             <Header reviews={reviews} filters={filters} setFilters={setFilters} />
 
             <div className="container">
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                    <LineChartCard title="Average Rating Over Time" data={ratingsTrend} dataKey="rating" />
-                    <BarChartCard title="Total Reviews per Property" data={reviewCount} dataKey="count" />
-                </div>
-                {/* KPIs for all properties */}
+
                 <KPI properties={properties} />
 
-                {/* Dashboard per-property */}
-                <Dashboard properties={reviews} />
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                    <LineChartCard title="Average Rating Over Time" data={ratingsTrend} dataKey="rating" />
+                    <BarChartCard title="Average Reviews per Property" data={average} dataKey="value" />
+                </div>
+
+                <Dashboard selectedProperty={reviews} setReviews={setReviews} />
 
                 {/* Public preview of reviews marked for display */}
-                <PublicPreview reviews={reviews && reviews.filter((r) => r.display)} />
+                <PublicPreview reviews={reviews.filter((r) => r.display)} />
             </div>
         </div>
 

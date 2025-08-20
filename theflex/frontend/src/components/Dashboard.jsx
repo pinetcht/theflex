@@ -1,27 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { aggregateProperties } from '../utils/aggregateProperties';
 import { CompactTable } from '@table-library/react-table-library/compact';
 import { useSort } from "@table-library/react-table-library/sort";
 import { useTheme } from "@table-library/react-table-library/theme";
 import { getTheme } from "@table-library/react-table-library/baseline";
-import "../styles/Dashboard.css"
 import axios from 'axios';
+import "../styles/Dashboard.css"
+const PUBLIC_REVIEWS_PATH = './data/publicReviews.json';
 
 
-
-const Dashboard = (selectedProperty) => {
-    const [reviews, setReviews] = useState([]);
+const Dashboard = ({ selectedProperty, setReviews }) => {
     const navigate = useNavigate();
     const channelNames = {
         2001: "Google",
         2002: "Booking.com",
         2003: "AirBnb"
     }
-
-    useEffect(() => {
-        console.log(selectedProperty.properties)
-    }, [selectedProperty]);
 
     const theme = useTheme({
         HeaderRow: `
@@ -39,7 +33,7 @@ const Dashboard = (selectedProperty) => {
     });
 
     const sort = useSort(
-        { nodes: selectedProperty.properties },
+        { nodes: selectedProperty },
         {
             onChange: onSortChange,
         },
@@ -50,7 +44,7 @@ const Dashboard = (selectedProperty) => {
                 DATE: (array) =>
                     array.sort(
                         (a, b) =>
-                            new Date(a.departureDate) - new Date(b.departureDate) // ✅ numeric date comparison
+                            new Date(a.departureDate) - new Date(b.departureDate)
                     ),
             },
         }
@@ -61,9 +55,32 @@ const Dashboard = (selectedProperty) => {
     }
 
 
+
+    const addToPublic = async (review, onUpdate) => {
+        try {
+            const response = await axios.post(`http://localhost:3000/api/reviews/${review.id}/publish`);
+            const updatedReview = response.data;
+            if (typeof onUpdate === 'function') {
+                onUpdate(updatedReview);
+            }
+        } catch (err) {
+            console.error('Error publishing review:', err);
+        }
+    };
+
+
+    const handleReviewApproved = (updatedReview) => {
+        setReviews(prevReviews =>
+            prevReviews.map(r =>
+                r.id === updatedReview.id ? updatedReview : r
+            )
+        );
+    };
+
+
     const COLUMNS = [
         { label: 'Property', renderCell: (item) => item.listingName || '' },
-        { label: 'Review', renderCell: (item) => (<div className="reviewCell"> {item.publicReview || item.privateFeedback || '' }</div>) },
+        { label: 'Review', renderCell: (item) => (<div className="reviewCell"> {item.publicReview || item.privateFeedback || ''}</div>) },
         { label: 'Ratings', renderCell: (item) => item.rating, sort: { sortKey: "RATING" } },
         { label: 'Channel', renderCell: (item) => channelNames[item.channelId], sort: { sortKey: "CHANNEL" } },
         {
@@ -71,9 +88,9 @@ const Dashboard = (selectedProperty) => {
             sort: { sortKey: "DATE" }
         },
         {
-            label: 'Add to Public', renderCell: () =>
-                <button className="addtoSite" onClick={() => console.log('hello')}>
-                    click me
+            label: 'Publish to Public', renderCell: (item) =>
+                <button className="addtoSite" onClick={() => addToPublic(item, handleReviewApproved)}>
+                    {item.display === true ? "Unpublish" : "Publish"}
                 </button>,
         }
     ];
@@ -82,11 +99,15 @@ const Dashboard = (selectedProperty) => {
     return (
         <div>
 
-            <CompactTable
+            <CompactTable className="table"
                 columns={COLUMNS}
-                data={{ nodes: selectedProperty.properties }}
+                data={{ nodes: selectedProperty }}
                 sort={sort}
                 theme={theme}
+                rowProps={{
+                    onClick: (item) => navigate(`/property/${item.listingName}`),
+                    className: 'table-row',
+                }}
             />
         </div>
     );

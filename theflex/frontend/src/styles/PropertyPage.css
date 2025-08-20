@@ -1,10 +1,266 @@
-.backbutton:hover {
-    cursor: pointer;
+body {
+    background-color: #fffdf7;
+    /* padding: 2%; */
+    margin:0;
 }
 
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    align-items: center;
+    justify-self: center;
+    width: 80vw;
+    /* border:solid; */
+
+}
+
+
+.header {
+    background-color: #284e4c;
+    color: #f1f3ee;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 110vw;
+    padding: 1rem 2%;
+    /* optional padding inside header */
+    box-sizing: border-box;
+    /* ensure padding doesn’t break full width */
+    margin-left: calc(-2%);
+    /* negate body padding if necessary */
+}
+
+
+.imageDisplay {
+    display: flex;
+    flex-direction: row;
+    height: 450px;
+    /* border: solid; */
+    justify-self: center;
+    width: 80%;
+    gap: 10px;
+}
+
+.leftDisplay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 50%;
+}
+
+.leftDisplay img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+}
+
+.gridDisplay {
+    display: grid;
+    width: 50%;
+    height: 100%;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    /* border: solid; */
+    /* border-color: red; */
+}
+
+.gridDisplay img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    /* border: solid; */
+    /* border-color:blueviolet; */
+}
+
+.overview {
+    /* border: solid; */
+    height: 8vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.detail {
+    /* border: solid; */
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 7rem;
+    margin: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.detailText {
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    text-align: center;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+.detail img {
+    max-height: 80%;
+}
+
+.card {
+    /* border: solid; */
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    height: fit-content;
+    width: 60vw;
+
+}
+
+.card.amenity {
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    /* border:solid; */
+}
+
+.amenities {
+    flex: 1;
+    height: 80%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    margin-bottom: 0rem;
+    /* border:solid; */
+
+}
+
+.amenities>.detail {
+    margin: 0rem;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    max-height: 5vh;
+    justify-content: start;
+
+}
+
+
+.backbutton:hover {
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card.stay {
+    height: fit-content;
+}
+
+
+.subRules {
+    display: flex;
+    flex-direction: column;
+    background-color: #f1f3ee;
+    /* border: solid; */
+    border-radius: 20px;
+    height: 20vh;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.subSubRulesContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 80%;
+}
+
+.subSubRulesContainer.rules {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    justify-items: center;
+
+}
+
+.subSubRules.rules {
+    width:80%;
+    margin:1%;
+}
+
+.subRules.cancel {
+    height: fit-content;
+}
+
+.subSubRulesContainer.cancel {
+    flex-direction: column;
+}
+
+.subSubRules.cancel {
+    width: 95%;
+    margin-bottom: 1rem;
+}
+
+
+.subSubRules {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 10px;
+    max-height: 100%;
+    width: 45%;
+    padding: 0.5rem;
+}
+
+.card.location {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+
+.card.location img {
+    width: 95%;
+}
+
+.subRules.review {
+    height: fit-content;
+}
+
+.subSubRules.review {
+    width: 95%;
+}
+
+
+
+/* CSS */
 .backbutton {
-    border: solid;
-    border-radius: 3%;
-    width:fit-content;
-    padding:2px;
+    /* background-color:#f1f3ee; */
+    border-radius: 8px;
+    border-width: 0;
+    color: #f1f3ee;
+    cursor: pointer;
+    display: inline-block;
+    font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 10px 12px;
+    text-align: center;
+    transition: all 200ms;
+    vertical-align: baseline;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+
+.backbutton:hover {
+    text-decoration: underline;
 }

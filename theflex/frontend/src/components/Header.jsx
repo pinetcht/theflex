@@ -37,13 +37,10 @@ const Header = ({ filters, setFilters }) => {
   const channels = ['Booking.com', 'Google', 'AirBnb']
   const properties = ['Downtown Apartment', 'Beach House', 'Mountain Cabin']
 
-  console.log(channels)
-  console.log(properties)
-
   return (
     <header
       style={{
-        background: "#2c3e50",
+        background: "#284e4c",
         color: "white",
         padding: "1rem 2rem",
         display: "flex",
@@ -53,7 +50,7 @@ const Header = ({ filters, setFilters }) => {
         gap: "1rem"
       }}
     >
-      <h1>Manager Dashboard</h1>
+      <h1>The Flex Manager Dashboard</h1>
 
       {/* Property filter */}
       <div>

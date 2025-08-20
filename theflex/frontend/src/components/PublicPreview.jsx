@@ -32,7 +32,7 @@ const PublicPreview = ({ reviews }) => {
       <h2>Public Website Preview</h2>
       {reviews.map((r) => (
         <blockquote key={r.id} style={{ marginBottom: "10px" }}>
-          “{r.text}” – {"⭐".repeat(r.rating)}
+          “{r.publicReview}” – {"⭐".repeat(r.rating)}
         </blockquote>
       ))}
     </div>
