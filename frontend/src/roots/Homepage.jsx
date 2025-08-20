@@ -9,6 +9,8 @@ import GoogleReviewCard from "../components/GoogleReviewCard";
 import { aggregateProperties } from '../utils/aggregateProperties';
 import { processChartData } from '../utils/processChartData';
 import Dashboard from "../components/Dashboard";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 import "../styles/Homepage.css"
 
 function Homepage() {
@@ -37,12 +39,16 @@ function Homepage() {
             if (filters.startDate) params.startDate = filters.startDate;
             if (filters.endDate) params.endDate = filters.endDate;
 
-            const response = await axios.get("http://localhost:3000/api/reviews", { params });
+            const response = await axios.get(`${API_BASE}/api/reviews`, { params });
             setReviews(response.data.reviews);
         } catch (err) {
             console.error("Error fetching reviews:", err);
         }
     };
+
+    useEffect(()=>{
+        console.log(reviews)
+    }, [reviews])
 
 
     const fetchGoogleReviews = async () => {

@@ -14,6 +14,7 @@ import Location from "../components/PropertyDetails/Location";
 import Reviews from "../components/PropertyDetails/Reviews";
 
 import "../styles/PropertyPage.css";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function PropertyPage() {
   const { id } = useParams();
@@ -24,8 +25,9 @@ function PropertyPage() {
     const fetchPropertyReviews = async () => {
       const params = {};
       params.property = id;
-      const res = await axios.get("http://localhost:3000/api/reviews", { params });
+      const res = await axios.get(`${API_BASE}/api/reviews`, { params });
       setReviews(res.data.reviews);
+
     };
 
     fetchPropertyReviews();
