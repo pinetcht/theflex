@@ -1,35 +1,44 @@
 import React from "react";
 
-const Header = ({ propertiesData, reviews, filters, setFilters }) => {
-  console.log(reviews)
+const Header = ({ filters, setFilters }) => {
   // Handle property selection
   const handlePropertyChange = (e) => {
     const selected = e.target.value;
-    setFilters({
-      ...filters,
-      property: selected === "all" ? null : selected
-    });
+    setFilters(filter => ({
+      ...filter,
+      property: selected
+    }));
   };
 
   // Handle channel selection
   const handleChannelChange = (e) => {
     const selected = e.target.value;
-    setFilters({
-      ...filters,
-      channel: selected === "all" ? null : selected
-    });
+    setFilters(filter => ({
+      ...filter,
+      channel: selected
+    }));
   };
 
-  // Handle date range
+
   const handleStartDateChange = (e) => {
-    setFilters({ ...filters, startDate: e.target.value });
-  };
-  const handleEndDateChange = (e) => {
-    setFilters({ ...filters, endDate: e.target.value });
+    setFilters(prev => ({
+      ...prev,
+      startDate: e.target.value
+    }));
   };
 
-  // Extract unique channels from reviews
-  const channels = Array.from(new Set(reviews.map((r) => r.channel)));
+  const handleEndDateChange = (e) => {
+    setFilters(prev => ({
+      ...prev,
+      endDate: e.target.value
+    }));
+  };
+
+  const channels = ['Booking.com', 'Google', 'AirBnb']
+  const properties = ['Downtown Apartment', 'Beach House', 'Mountain Cabin']
+
+  console.log(channels)
+  console.log(properties)
 
   return (
     <header
@@ -53,14 +62,14 @@ const Header = ({ propertiesData, reviews, filters, setFilters }) => {
         </label>
         <select
           id="property-select"
-          value={filters.property || "all"}
+          value={filters.property || "All"}
           onChange={handlePropertyChange}
           style={{ padding: "0.3rem 0.5rem", borderRadius: "4px", border: "none" }}
         >
-          <option value="all">View All</option>
-          {propertiesData.map((p) => (
-            <option key={p.listingMapId} value={p.listingMapId}>
-              {p.listingName}
+          <option value="All">View All</option>
+          {properties.map((p) => (
+            <option key={p} value={p}>
+              {p}
             </option>
           ))}
         </select>
@@ -73,11 +82,11 @@ const Header = ({ propertiesData, reviews, filters, setFilters }) => {
         </label>
         <select
           id="channel-select"
-          value={filters.channel || "all"}
+          value={filters.channel || "All"}
           onChange={handleChannelChange}
           style={{ padding: "0.3rem 0.5rem", borderRadius: "4px", border: "none" }}
         >
-          <option value="all">View All</option>
+          <option value="All">View All</option>
           {channels.map((c) => (
             <option key={c} value={c}>
               {c}

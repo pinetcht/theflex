@@ -2,14 +2,14 @@
 export function aggregateProperties(reviews) {
     const aggregated = Object.values(
         reviews.reduce((acc, r) => {
-            if (!acc[r.listing]) acc[r.listing] = {
-                listingMapId: r.mapId,
-                listingName: r.listing,
+            if (!acc[r.listingName]) acc[r.listingName] = {
+                listingMapId: r.listingMapId,
+                listingName: r.listingName,
                 totalReviews: 0,
                 sumRating: 0
             };
-            acc[r.listing].totalReviews += 1;
-            acc[r.listing].sumRating += r.rating || 0;
+            acc[r.listingName].totalReviews += 1;
+            acc[r.listingName].sumRating += r.rating || 0;
             return acc;
         }, {})
     );

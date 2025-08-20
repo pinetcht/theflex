@@ -10,39 +10,18 @@ import axios from 'axios';
 
 
 
-const Dashboard = () => {
+const Dashboard = (selectedProperty) => {
     const [reviews, setReviews] = useState([]);
-    const [properties, setProperties] = useState([]);
     const navigate = useNavigate();
-
-
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                const response = await axios.get('http://localhost:3000/api/reviews');
-                setReviews(response.data.reviews);
-            } catch (err) {
-                console.error('Error fetching reviews:', err);
-                throw err;
-            }
-        };
-        fetchReviews();
-    }, []);
-
+    const channelNames = {
+        2001: "Google",
+        2002: "Booking.com",
+        2003: "AirBnb"
+    }
 
     useEffect(() => {
-        console.log(reviews)
-        console.log(reviews.length)
-        if (reviews.length > 0) {
-            const aggregated = aggregateProperties(reviews);
-            setProperties(aggregated);
-        }
-    }, [reviews]);
-
-
-    useEffect(() => {
-        console.log(properties)
-    }, [properties]);
+        console.log(selectedProperty.properties)
+    }, [selectedProperty]);
 
     const theme = useTheme({
         HeaderRow: `
@@ -60,15 +39,19 @@ const Dashboard = () => {
     });
 
     const sort = useSort(
-        { nodes: properties },
+        { nodes: selectedProperty.properties },
         {
             onChange: onSortChange,
         },
         {
             sortFns: {
-                NAME: (array) => array.sort((a, b) => a.listingName.localeCompare(b.listingName)),
-                REVIEWS: (array) => array.sort((a, b) => a.totalReviews - b.totalReviews),
-                AVG: (array) => array.sort((a, b) => a.averageRating - b.averageRating),
+                RATING: (array) => array.sort((a, b) => a.rating - b.rating),
+                CHANNEL: (array) => array.sort((a, b) => channelNames[a.channelId].localeCompare(channelNames[b.channelId])),
+                DATE: (array) =>
+                    array.sort(
+                        (a, b) =>
+                            new Date(a.departureDate) - new Date(b.departureDate) // ✅ numeric date comparison
+                    ),
             },
         }
     );
@@ -78,27 +61,37 @@ const Dashboard = () => {
     }
 
 
-
     const COLUMNS = [
-        { label: 'Listing Name', renderCell: (item) => item.listingName, sort: { sortKey: "NAME" } },
-        { label: 'Total Reviews', renderCell: (item) => item.totalReviews, sort: { sortKey: "REVIEWS" } },
-        { label: 'Average Ratings', renderCell: (item) => item.averageRating, sort: { sortKey: "AVG" } }
+        { label: 'Property', renderCell: (item) => item.listingName || '' },
+        { label: 'Review', renderCell: (item) => (<div className="reviewCell"> {item.publicReview || item.privateFeedback || '' }</div>) },
+        { label: 'Ratings', renderCell: (item) => item.rating, sort: { sortKey: "RATING" } },
+        { label: 'Channel', renderCell: (item) => channelNames[item.channelId], sort: { sortKey: "CHANNEL" } },
+        {
+            label: 'Date', renderCell: (item) => item.departureDate.split(" ")[0],
+            sort: { sortKey: "DATE" }
+        },
+        {
+            label: 'Add to Public', renderCell: () =>
+                <button className="addtoSite" onClick={() => console.log('hello')}>
+                    click me
+                </button>,
+        }
     ];
 
 
     return (
-        <CompactTable
-            columns={COLUMNS}
-            data={{ nodes: properties }}
-            sort={sort}
-            theme={theme}
-            rowProps={{
-                onClick: (item) => navigate(`/property/${item.listingName}`),
-                className: 'table-row',
-            }}
-        />
+        <div>
+
+            <CompactTable
+                columns={COLUMNS}
+                data={{ nodes: selectedProperty.properties }}
+                sort={sort}
+                theme={theme}
+            />
+        </div>
     );
 };
+
 
 
 export default Dashboard;

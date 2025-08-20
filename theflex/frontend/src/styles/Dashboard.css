@@ -2,3 +2,10 @@
   background-color: #f5f5f5;
   cursor: pointer;
 }
+
+.reviewCell {
+    white-space: normal; /* allows wrapping */
+    word-wrap: break-word; /* ensures long words break */
+    overflow-wrap: break-word; /* extra safety */
+    max-width: 300px; /* optional: limit width for wrapping */
+}
