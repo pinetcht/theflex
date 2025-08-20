@@ -1,8 +1,10 @@
 const express = require('express');
+const axios = require('axios')
 const request = require('request');
 const fs = require('fs');
 require("dotenv").config();
 var cors = require("cors");
+// import axios from 'axios';
 
 
 const app = express();
@@ -47,62 +49,6 @@ app.use((req, res, next) => {
 });
 
 
-
-// app.get('/api/reviews', (req, res) => {
-//     const options = {
-//         url: 'https://api.hostaway.com/v1/reviews',
-//         headers: {
-//             'Authorization': HOSTAWAY_API_KEY,
-//             'Account-Id': HOSTAWAY_ACCOUNT_ID
-//         },
-//         json: true // Automatically parses JSON response
-//     };
-
-
-
-//     request(options, (error, response, body) => {
-//         const { property, channel, startDate, endDate } = req.query;
-//         let reviews = [];
-
-//         if (!error && response.statusCode === 200) {
-//             reviews = body.result || [];
-//             if (!reviews.length) {
-//                 console.log('Sandbox empty, loading mock reviews...');
-//                 const mockData = fs.readFileSync(MOCK_JSON_PATH, 'utf8');
-//                 reviews = JSON.parse(mockData).result || [];
-//             }
-//         } else {
-//             console.error('Error fetching reviews:', error || body);
-//             const mockData = fs.readFileSync(MOCK_JSON_PATH, 'utf8');
-//             reviews = JSON.parse(mockData).result || [];
-//         }
-
-//         if (property && property !== "All") {
-//             console.log(property)
-//             reviews = reviews.filter(r => r.listingName === property);
-//         }
-//         if (channel && channel !== "All") {
-//             console.log(channel)
-//             reviews = reviews.filter(r => channelNames[r.channelId] === channel);
-//         }
-//         if (startDate && endDate) {
-//             reviews = reviews.filter(r => new Date(startDate) <= new Date(r.departureDate) && new Date(r.departureDate) <= new Date(endDate));
-//         }
-
-//         if (startDate) {
-//             reviews = reviews.filter(r => new Date(startDate) <= new Date(r.departureDate));
-//         }
-
-//         if (endDate) {
-//             reviews = reviews.filter(r => new Date(endDate) >= new Date(r.departureDate));
-//         }
-
-//         // const normalized = normalizeReviews(reviews);
-//         res.json({ reviews: reviews });
-//     });
-// });
-
-// backend: /api/reviews/:id/publish
 
 app.get('/api/reviews', (req, res) => {
     const options = {
@@ -300,18 +246,6 @@ app.get('/api/reviews/:listing', (req, res) => {
     res.json({ status: 'success', result: propertyReviews });
 });
 
-
-
-app.get('/api/channel/:channelName', (req, res) => {
-    const channelName = req.params.channelName;
-    const allReviews = JSON.parse(fs.readFileSync(MOCK_JSON_PATH, 'utf8')).result;
-
-    const channel = allReviews.filter(r =>
-        channelNames[r.channelId] == channelName
-    );
-
-    res.json({ status: 'success', result: channel });
-});
 
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
